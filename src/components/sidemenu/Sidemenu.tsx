@@ -1,4 +1,4 @@
-import type { SidemenuRoute } from '@/routes/route';
+import type { SidemenuRoute } from '@/models/routes.model';
 import { Sidelink } from './Sidelink';
 
 interface Props {

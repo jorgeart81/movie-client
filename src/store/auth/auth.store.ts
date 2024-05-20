@@ -1,7 +1,7 @@
 import { create, StateCreator } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
-import { AuthStatus } from '../models';
+import { AuthStatus } from '../interfaces';
 import { SotorageKey, type User } from '@/models';
 
 interface AuthState {

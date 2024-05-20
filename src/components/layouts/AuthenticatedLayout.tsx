@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 
-import { sidemenuRoutes } from '@/routes/route';
+import { sidemenuRoutes } from '@/models/routes.model';
 import { useAuthStore } from '@/store/auth/auth.store';
 import { Sidemenu } from '../sidemenu';
 

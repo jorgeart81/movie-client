@@ -1,6 +1,6 @@
-import { createBrowserRouter } from 'react-router-dom';
-import App from '../App';
 import { AuthenticatedLayout } from '@/components/layouts';
+import { Home } from '@/components/pages';
+import { createBrowserRouter } from 'react-router-dom';
 
 export const router = createBrowserRouter([
   {
@@ -10,6 +10,6 @@ export const router = createBrowserRouter([
   {
     path: '/dashboard',
     element: <AuthenticatedLayout />,
-    children: [{ path: '', element: <App /> }],
+    children: [{ path: '', element: <Home /> }],
   },
 ]);
