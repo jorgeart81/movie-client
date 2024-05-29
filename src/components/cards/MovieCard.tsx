@@ -17,7 +17,7 @@ export const MovieCard = ({
 }: Props) => {
   return (
     <>
-      <div className='relative flex max-w-[300px] flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md'>
+      <div className='relative flex max-w-[300px] flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md hover:shadow-xl transition-shadow'>
         <div className='relative m-0 overflow-hidden rounded-none bg-transparent bg-clip-border text-gray-700 shadow-none'>
           <img src={image} alt={`${title} - image`} />
         </div>
