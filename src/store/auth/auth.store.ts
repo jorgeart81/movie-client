@@ -6,7 +6,7 @@ import { SotorageKey, type User } from '@/models';
 import { AuthService } from '@/services';
 
 interface AuthState {
-  user: User;
+  user?: User;
   status: AuthStatus;
   token?: string;
   refreshToken?: string;
@@ -17,12 +17,6 @@ interface Actions {
 }
 
 const initialState: AuthState = {
-  user: {
-    id: '',
-    name: '',
-    email: '',
-    role: '',
-  },
   status: 'authorized',
 };
 
