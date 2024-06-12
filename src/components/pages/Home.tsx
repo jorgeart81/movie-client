@@ -1,6 +1,7 @@
+import { useEffect } from 'react';
+
 import { useMoviesStore } from '@/store/movies/movies.store';
 import { MovieCard } from '../cards';
-import { useEffect } from 'react';
 import { formattedDate } from '@/utils';
 
 export const Home = () => {
