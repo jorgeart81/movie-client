@@ -1,7 +1,7 @@
 import { create, StateCreator } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { devtools, persist } from 'zustand/middleware';
 
-import { type User } from '@/models';
+import { SotorageKey, type User } from '@/models';
 import { AuthService } from '@/services';
 import type { AuthStatus } from '../interfaces';
 
@@ -60,4 +60,11 @@ const storeApi: StateCreator<
   },
 });
 
-export const useAuthStore = create<AuthState & Actions>()(devtools(storeApi));
+export const useAuthStore = create<AuthState & Actions>()(
+  devtools(
+    persist(storeApi, {
+      name: SotorageKey.AUTH,
+      partialize: state => ({ status: state.status }),
+    })
+  )
+);

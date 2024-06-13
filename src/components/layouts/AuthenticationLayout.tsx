@@ -6,21 +6,21 @@ import { RoutePath } from '@/models';
 
 export const AuthenticationLayout = () => {
   const navitate = useNavigate();
-  const { status, token } = useAuthStore(state => ({
+  const { status } = useAuthStore(state => ({
     status: state.status,
     token: state.token,
     getRefreshToken: state.getRefreshToken,
   }));
 
   useEffect(() => {
-    if (status === 'authorized' && token) {
+    if (status === 'authorized') {
       navitate(RoutePath.DASHBOARD, {
         replace: true,
         unstable_viewTransition: true,
       });
       return;
     }
-  }, [status, token]);
+  }, [status]);
 
   return <Outlet />;
 };

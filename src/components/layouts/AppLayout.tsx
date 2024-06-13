@@ -24,7 +24,7 @@ export const AppLayout = () => {
 
   return (
     <>
-      {status === 'authorized' && token ? (
+      {status === 'authorized' ? (
         <div className='bg-slate-100 overflow-y-scroll w-screen h-screen antialiased text-slate-800 selection:bg-blue-600 selection:text-white'>
           <div className='flex relative'>
             <Sidemenu
