@@ -7,7 +7,15 @@ export class AuthService {
   static login = async (request: LoginRequest): Promise<LoginResponse> => {
     try {
       const { data } = await moviesApi.post('/authenticate', request);
-      console.log(data);
+      return data;
+    } catch (error) {
+      errorHandler(error);
+    }
+  };
+
+  static refreshToken = async (): Promise<LoginResponse> => {
+    try {
+      const { data } = await moviesApi.get('/authenticate/refresh');
       return data;
     } catch (error) {
       errorHandler(error);
