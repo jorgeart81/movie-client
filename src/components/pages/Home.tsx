@@ -4,7 +4,7 @@ import { useMoviesStore } from '@/store/movies/movies.store';
 import { MovieCard } from '../cards';
 import { formattedDate } from '@/utils';
 
-export const Home = () => {
+const Home = () => {
   const getMovies = useMoviesStore(state => state.getMovies);
   const movies = useMoviesStore(state => state.movies);
 
@@ -32,3 +32,5 @@ export const Home = () => {
     </div>
   );
 };
+
+export default Home;

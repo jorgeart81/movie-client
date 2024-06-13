@@ -1,31 +1,35 @@
 import { lazy, Suspense } from 'react';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 
-import { AuthenticatedLayout } from '@/components/layouts';
-import { Home } from '@/components/pages';
+import { AppLayout } from '@/components/layouts';
+import { AuthenticationLayout } from '@/components/layouts/AuthenticationLayout';
 
-const Login = lazy(() => import('@/components/pages/auth/Login'));
+const Home = lazy(() => import('@/components/pages/Home'));
 
 export const router = createBrowserRouter([
   {
-    path: '',
-    element: <h1 className='text-3xl font-bold underline'>Hello world!</h1>,
+    path: '/*',
+    element: <Navigate to={'/auth/login'} />,
   },
   {
     path: '/dashboard',
-    element: <AuthenticatedLayout />,
+    element: <AppLayout />,
     children: [{ path: '', element: <Home /> }],
   },
   {
     path: '/auth',
+    element:<AuthenticationLayout/>,
     children: [
       {
         path: 'login',
-        element: (
-          <Suspense>
-            <Login />
-          </Suspense>
-        ),
+        lazy: () =>
+          import('@/components/pages/auth/Login').then(module => ({
+            element: (
+              <Suspense fallback={<div>Loading...</div>}>
+                <module.default />
+              </Suspense>
+            ),
+          })),
       },
     ],
   },

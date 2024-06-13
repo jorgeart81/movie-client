@@ -11,7 +11,7 @@ const initialValues: LoginForm = {
   password: 'secret',
 };
 
-function Login() {
+const Login = () => {
   const login = useAuthStore.getState().login;
 
   const { values, handleChange, handleSubmit } = useFormik<LoginForm>({
@@ -97,6 +97,6 @@ function Login() {
       </div>
     </>
   );
-}
+};
 
 export default Login;
