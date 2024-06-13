@@ -1,30 +1,28 @@
 import { NavLink } from 'react-router-dom';
 
+import clsx from 'clsx';
+import { HomeIcon } from '../icons';
+
 interface Props {
   to: string;
   name: string;
-  description?: string;
 }
 
-export const Sidelink = ({ to, name, description }: Props) => {
+export const Sidelink = ({ to, name }: Props) => {
   return (
     <NavLink
       to={to}
-      end
-      unstable_viewTransition
       className={({ isActive }) =>
-        `${
-          isActive && 'bg-blue-800'
-        } w-full px-2 inline-flex space-x-2 items-center border-b border-slate-700 py-3 hover:bg-white/5 transition ease-linear duration-150`
+        clsx(
+          'relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6',
+          { 'bg-gray-50 text-gray-800 border-indigo-500': isActive }
+        )
       }>
-      <div className='flex flex-col'>
-        <span className='text-lg font-bold leading-5 text-white'>{name}</span>
-        {description && (
-          <span className='text-sm text-white/50 hidden md:block'>
-            {description}
-          </span>
-        )}
-      </div>
+      <span className='inline-flex justify-center items-center ml-4'>
+        <HomeIcon />
+      </span>
+      <span className='ml-2 text-sm tracking-wide truncate'>{name}</span>
     </NavLink>
+    // </NavLink>
   );
 };
