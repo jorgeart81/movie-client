@@ -21,6 +21,15 @@ export class AuthService {
       errorHandler(error);
     }
   };
+
+  static logout = async () => {
+    try {
+      const data = await moviesApi.get('/authenticate/logout');
+      return { ok: data.status === 202 };
+    } catch (error) {
+      errorHandler(error);
+    }
+  };
 }
 
 function errorHandler(error: unknown): never {

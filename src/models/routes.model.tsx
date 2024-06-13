@@ -1,9 +1,11 @@
+import { RoutePath } from './enum/routePath';
+
 export interface SidemenuRoute {
   to: string;
   name: string;
-  description: string;
+  description?: string;
 }
 
 export const sidemenuRoutes: SidemenuRoute[] = [
-  { to: '', name: 'Dashboard', description: 'Data Overview' },
+  { to: RoutePath.DASHBOARD, name: 'Dashboard' },
 ];

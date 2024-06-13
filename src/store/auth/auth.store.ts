@@ -15,6 +15,7 @@ interface AuthState {
 interface Actions {
   login: (email: string, password: string) => void;
   getRefreshToken: () => void;
+  logout: () => void;
 }
 
 const initialState: AuthState = {
@@ -46,6 +47,14 @@ const storeApi: StateCreator<
       set({ token: accessToken, refreshToken, status: 'authorized' });
     } catch (error) {
       set(initialState);
+      if (error instanceof Error) throw error.message;
+    }
+  },
+  logout: async () => {
+    try {
+      const { ok } = await AuthService.logout();
+      if (ok) set(initialState);
+    } catch (error) {
       if (error instanceof Error) throw error.message;
     }
   },

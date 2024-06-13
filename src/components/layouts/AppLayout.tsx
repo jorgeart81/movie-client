@@ -1,15 +1,26 @@
 import { Navigate, Outlet } from 'react-router-dom';
 
-import { sidemenuRoutes } from '@/models/routes.model';
+import { RoutePath, sidemenuRoutes } from '@/models';
 import { useAuthStore } from '@/store/auth/auth.store';
 import { Sidemenu } from '../sidemenu';
+import { useEffect } from 'react';
 
 export const AppLayout = () => {
-  const { status, token, user } = useAuthStore(state => ({
-    status: state.status,
-    token: state.token,
-    user: state.user,
-  }));
+  const { status, token, user, getRefreshToken, logout } = useAuthStore(
+    state => ({
+      status: state.status,
+      token: state.token,
+      user: state.user,
+      getRefreshToken: state.getRefreshToken,
+      logout: state.logout,
+    })
+  );
+
+  useEffect(() => {
+    if (!token) {
+      getRefreshToken();
+    }
+  }, [token]);
 
   return (
     <>
@@ -20,6 +31,7 @@ export const AppLayout = () => {
               username={user?.name}
               role={user?.role}
               routes={sidemenuRoutes}
+              handleLogout={logout}
             />
 
             <main className='w-full p-4'>
@@ -28,7 +40,7 @@ export const AppLayout = () => {
           </div>
         </div>
       ) : (
-        <Navigate to={'/'} />
+        <Navigate to={RoutePath.ROOT} />
       )}
     </>
   );
