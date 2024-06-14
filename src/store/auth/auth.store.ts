@@ -46,7 +46,7 @@ const storeApi: StateCreator<
       const { accessToken, refreshToken } = await AuthService.refreshToken();
       set({ token: accessToken, refreshToken, status: 'authorized' });
     } catch (error) {
-      set(initialState);
+      set({ status: 'pending' });
       if (error instanceof Error) throw error.message;
     }
   },
