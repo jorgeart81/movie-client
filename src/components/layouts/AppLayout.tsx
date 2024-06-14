@@ -1,14 +1,15 @@
+import { useCallback, useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
 import { RoutePath, sidemenuRoutes } from '@/models';
 import { useAuthStore } from '@/store/auth/auth.store';
 import { Sidemenu } from '../sidemenu';
-import { useCallback, useEffect, useState } from 'react';
 
 export const AppLayout = () => {
   const [refreshInterval, setRefreshInterval] = useState<
     NodeJS.Timeout | undefined
   >();
+
   const { status, token, user, getRefreshToken, logout, statusValidate } =
     useAuthStore(state => ({
       status: state.status,
@@ -23,14 +24,14 @@ export const AppLayout = () => {
     (start: boolean) => {
       if (start) {
         const interval: NodeJS.Timeout = setInterval(() => {
-          // getRefreshToken();
+          getRefreshToken();
           console.log('refresh_token');
         }, 60000);
         setRefreshInterval(interval);
         return;
       }
 
-      if (refreshInterval) clearInterval(refreshInterval);
+      clearInterval(refreshInterval);
       setRefreshInterval(undefined);
     },
     [refreshInterval]
@@ -42,14 +43,8 @@ export const AppLayout = () => {
   };
 
   useEffect(() => {
-    getRefreshToken();
-  }, []);
-
-  useEffect(() => {
-    const isStatusValid = statusValidate();
-    if (status === 'unauthorized' || !isStatusValid) {
-      logout();
-    }
+    if (!token && status === 'authorized') getRefreshToken();
+    if (status === 'unauthorized' || !statusValidate()) logout();
 
     handleRefresh(status === 'authorized');
 
