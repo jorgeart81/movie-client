@@ -13,9 +13,10 @@ interface AuthState {
 }
 
 interface Actions {
-  login: (email: string, password: string) => void;
   getRefreshToken: () => void;
+  login: (email: string, password: string) => void;
   logout: () => void;
+  statusValidate: () => boolean;
 }
 
 const initialState: AuthState = {
@@ -25,10 +26,19 @@ const initialState: AuthState = {
 const storeApi: StateCreator<
   AuthState & Actions,
   [['zustand/devtools', never]]
-> = set => ({
+> = (set, get) => ({
   ...initialState,
 
   // Actions
+  getRefreshToken: async () => {
+    try {
+      const { accessToken, refreshToken } = await AuthService.refreshToken();
+      set({ token: accessToken, refreshToken, status: 'authorized' });
+    } catch (error) {
+      set({ status: 'pending' });
+      if (error instanceof Error) throw error.message;
+    }
+  },
   login: async (email: string, password: string) => {
     try {
       const { accessToken, refreshToken } = await AuthService.login({
@@ -41,15 +51,7 @@ const storeApi: StateCreator<
       if (error instanceof Error) throw error.message;
     }
   },
-  getRefreshToken: async () => {
-    try {
-      const { accessToken, refreshToken } = await AuthService.refreshToken();
-      set({ token: accessToken, refreshToken, status: 'authorized' });
-    } catch (error) {
-      set({ status: 'pending' });
-      if (error instanceof Error) throw error.message;
-    }
-  },
+
   logout: async () => {
     try {
       const { ok } = await AuthService.logout();
@@ -57,6 +59,19 @@ const storeApi: StateCreator<
     } catch (error) {
       if (error instanceof Error) throw error.message;
     }
+  },
+  statusValidate: () => {
+    const validAuthStatuses: AuthStatus[] = [
+      'authorized',
+      'unauthorized',
+      'pending',
+    ];
+    if (!validAuthStatuses.includes(get().status)) {
+      set(initialState);
+      return false;
+    }
+
+    return true;
   },
 });
 

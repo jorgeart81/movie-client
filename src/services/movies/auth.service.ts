@@ -24,7 +24,9 @@ export class AuthService {
 
   static logout = async () => {
     try {
-      const data = await moviesApi.get('/authenticate/logout');
+      const data = await moviesApi.get('/authenticate/logout', {
+        signal: AbortSignal.timeout(5000),
+      });
       return { ok: data.status === 202 };
     } catch (error) {
       errorHandler(error);

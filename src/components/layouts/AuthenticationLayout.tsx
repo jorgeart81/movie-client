@@ -6,12 +6,20 @@ import { RoutePath } from '@/models';
 
 export const AuthenticationLayout = () => {
   const navitate = useNavigate();
-  const { status, getRefreshToken } = useAuthStore(state => ({
-    status: state.status,
-    getRefreshToken: state.getRefreshToken,
-  }));
+
+  const { status, getRefreshToken, statusValidate, logout } = useAuthStore(
+    state => ({
+      status: state.status,
+      getRefreshToken: state.getRefreshToken,
+      statusValidate: state.statusValidate,
+      logout: state.logout,
+    })
+  );
 
   useEffect(() => {
+    const isStatusValid = statusValidate();
+
+    if (!isStatusValid) logout();
     if (status === 'pending') getRefreshToken();
 
     if (status === 'authorized') {

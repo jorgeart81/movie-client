@@ -3,24 +3,60 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { RoutePath, sidemenuRoutes } from '@/models';
 import { useAuthStore } from '@/store/auth/auth.store';
 import { Sidemenu } from '../sidemenu';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export const AppLayout = () => {
-  const { status, token, user, getRefreshToken, logout } = useAuthStore(
-    state => ({
+  const [refreshInterval, setRefreshInterval] = useState<
+    NodeJS.Timeout | undefined
+  >();
+  const { status, token, user, getRefreshToken, logout, statusValidate } =
+    useAuthStore(state => ({
       status: state.status,
       token: state.token,
       user: state.user,
       getRefreshToken: state.getRefreshToken,
       logout: state.logout,
-    })
+      statusValidate: state.statusValidate,
+    }));
+
+  const handleRefresh = useCallback(
+    (start: boolean) => {
+      if (start) {
+        const interval: NodeJS.Timeout = setInterval(() => {
+          // getRefreshToken();
+          console.log('refresh_token');
+        }, 60000);
+        setRefreshInterval(interval);
+        return;
+      }
+
+      if (refreshInterval) clearInterval(refreshInterval);
+      setRefreshInterval(undefined);
+    },
+    [refreshInterval]
   );
 
+  const handleLogout = () => {
+    logout();
+    handleRefresh(false);
+  };
+
   useEffect(() => {
-    if (!token) {
-      getRefreshToken();
+    getRefreshToken();
+  }, []);
+
+  useEffect(() => {
+    const isStatusValid = statusValidate();
+    if (status === 'unauthorized' || !isStatusValid) {
+      logout();
     }
-  }, [token]);
+
+    handleRefresh(status === 'authorized');
+
+    return () => {
+      handleRefresh(false);
+    };
+  }, [status]);
 
   return (
     <>
@@ -31,7 +67,7 @@ export const AppLayout = () => {
               username={user?.name}
               role={user?.role}
               routes={sidemenuRoutes}
-              handleLogout={logout}
+              handleLogout={handleLogout}
             />
 
             <main className='w-full p-4'>
