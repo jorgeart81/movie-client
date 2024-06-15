@@ -5,7 +5,7 @@ import type { Movie } from '../interfaces';
 export class MoviesService {
   static getMovies = async (): Promise<Movie[]> => {
     try {
-      const { data } = await moviesApi.get('/movies');
+      const { data } = await moviesApi.get('/admin/movies');
       return data;
     } catch (error) {
       if (error instanceof AxiosError) {

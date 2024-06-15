@@ -3,6 +3,7 @@ import { devtools, persist } from 'zustand/middleware';
 
 import type { Movie } from '../interfaces';
 import { MoviesService } from '@/services';
+import { SotorageKey } from '@/models';
 
 interface MoviesState {
   movies: Movie[];
@@ -32,5 +33,5 @@ const storeApi: StateCreator<
 });
 
 export const useMoviesStore = create<MoviesState & Actions>()(
-  devtools(persist(storeApi, { name: 'test' }))
+  devtools(persist(storeApi, { name: SotorageKey.MOVIES }))
 );
