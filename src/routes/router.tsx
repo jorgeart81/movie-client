@@ -4,16 +4,26 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layouts';
 import { AuthenticationLayout } from '@/components/layouts/AuthenticationLayout';
 import { authLoader } from './loaders';
+import { CircleSpinner } from '@/components/spinners';
 
 const Home = lazy(() => import('@/components/pages/Home'));
 const Profile = lazy(() => import('@/components/pages/Profile'));
 const Settings = lazy(() => import('@/components/pages/Settings'));
+const NotFound = lazy(() => import('@/components/pages/NotFound'));
 
 export const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Navigate to='/auth' />,
+  },
   {
     path: '/auth',
     element: <AuthenticationLayout />,
     children: [
+      {
+        index: true,
+        element: <Navigate to='login' />,
+      },
       {
         path: 'login',
         lazy: () =>
@@ -28,18 +38,23 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: '/*',
-    element: <Navigate to={'/auth/login'} />,
+    path: '*',
+    element: <NotFound />,
   },
   {
-    path: '/',
+    path: '/app',
     element: <AppLayout />,
     loader: authLoader,
     children: [
       {
+        index: true,
+        element: <Navigate to='dashboard' />,
+      },
+      {
+        index: true,
         path: 'dashboard',
         element: (
-          <Suspense>
+          <Suspense fallback={<CircleSpinner />}>
             <Home />
           </Suspense>
         ),
@@ -47,7 +62,7 @@ export const router = createBrowserRouter([
       {
         path: 'profile',
         element: (
-          <Suspense>
+          <Suspense fallback={<CircleSpinner />}>
             <Profile />
           </Suspense>
         ),
@@ -55,7 +70,7 @@ export const router = createBrowserRouter([
       {
         path: 'settings',
         element: (
-          <Suspense>
+          <Suspense fallback={<CircleSpinner />}>
             <Settings />
           </Suspense>
         ),
