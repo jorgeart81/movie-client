@@ -8,7 +8,7 @@ export function authLoader() {
   const statusValidate = useAuthStore.getState().statusValidate;
 
   if (status !== 'authorized' || !statusValidate()) {
-    return redirect(RoutePath.ROOT);
+    return redirect(RoutePath.LOGIN);
   }
 
   return null;

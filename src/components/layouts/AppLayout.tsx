@@ -45,7 +45,7 @@ export const AppLayout = () => {
     if (!token && status === 'authorized') getRefreshToken();
     if (status === 'unauthorized' || !statusValidate()) {
       logout();
-      navigation(RoutePath.ROOT);
+      navigation(RoutePath.LOGIN);
     }
 
     handleRefresh(status === 'authorized');

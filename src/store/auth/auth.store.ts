@@ -58,7 +58,6 @@ const storeApi: StateCreator<
   logout: async () => {
     try {
       const { ok } = await AuthService.logout();
-      console.log(ok);
       if (ok) set(initialState);
     } catch (error) {
       if (error instanceof Error) throw error.message;
