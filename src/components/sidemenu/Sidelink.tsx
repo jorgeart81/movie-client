@@ -1,14 +1,14 @@
 import { NavLink } from 'react-router-dom';
 
 import clsx from 'clsx';
-import { HomeIcon } from '../icons';
 
 interface Props {
   to: string;
   name: string;
+  icon: JSX.Element;
 }
 
-export const Sidelink = ({ to, name }: Props) => {
+export const Sidelink = ({ to, name, icon }: Props) => {
   return (
     <NavLink
       to={to}
@@ -19,7 +19,7 @@ export const Sidelink = ({ to, name }: Props) => {
         )
       }>
       <span className='inline-flex justify-center items-center ml-4'>
-        <HomeIcon />
+        {icon}
       </span>
       <span className='ml-2 text-sm tracking-wide truncate'>{name}</span>
     </NavLink>

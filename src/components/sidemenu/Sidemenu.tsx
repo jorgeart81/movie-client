@@ -1,6 +1,8 @@
 import type { SidemenuRoute } from '@/models/routes.model';
 import { Sidelink } from './Sidelink';
 import { MouseEventHandler } from 'react';
+import { HomeIcon } from '../icons';
+import { RoutePath } from '@/models';
 
 interface Props {
   role?: string;
@@ -32,7 +34,11 @@ export const Sidemenu = ({
               </div>
             </li>
             <li>
-              <Sidelink to='' name='Dashboard' />
+              <Sidelink
+                to={RoutePath.DASHBOARD}
+                name='Dashboard'
+                icon={<HomeIcon />}
+              />
             </li>
 
             <li className='px-5'>
@@ -43,10 +49,10 @@ export const Sidemenu = ({
               </div>
             </li>
             <li>
-              <a
-                href='#'
-                className='relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6'>
-                <span className='inline-flex justify-center items-center ml-4'>
+              <Sidelink
+                to={RoutePath.PROFILE}
+                name='Profile'
+                icon={
                   <svg
                     className='w-5 h-5'
                     fill='none'
@@ -59,17 +65,14 @@ export const Sidemenu = ({
                       strokeWidth='2'
                       d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'></path>
                   </svg>
-                </span>
-                <span className='ml-2 text-sm tracking-wide truncate'>
-                  Profile
-                </span>
-              </a>
+                }
+              />
             </li>
             <li>
-              <a
-                href='#'
-                className='relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6'>
-                <span className='inline-flex justify-center items-center ml-4'>
+              <Sidelink
+                to={RoutePath.SETTINGS}
+                name='Settings'
+                icon={
                   <svg
                     className='w-5 h-5'
                     fill='none'
@@ -87,11 +90,8 @@ export const Sidemenu = ({
                       strokeWidth='2'
                       d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'></path>
                   </svg>
-                </span>
-                <span className='ml-2 text-sm tracking-wide truncate'>
-                  Settings
-                </span>
-              </a>
+                }
+              />
             </li>
           </ul>
 

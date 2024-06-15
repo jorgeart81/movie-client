@@ -36,8 +36,11 @@ export class AuthService {
 
 function errorHandler(error: unknown): never {
   if (error instanceof AxiosError) {
+    if (error.response?.status === 401)
+      throw new Error(error.response?.statusText);
+
     console.error(error.response?.data);
-    throw new Error(error.response?.data);
+    throw new Error(error.response?.data.message);
   }
 
   console.error(error);

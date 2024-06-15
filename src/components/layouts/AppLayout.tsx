@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 import { RoutePath, sidemenuRoutes } from '@/models';
 import { useAuthStore } from '@/store/auth/auth.store';
@@ -9,7 +9,7 @@ export const AppLayout = () => {
   const [refreshInterval, setRefreshInterval] = useState<
     NodeJS.Timeout | undefined
   >();
-
+  const navigation = useNavigate();
   const { status, token, user, getRefreshToken, logout, statusValidate } =
     useAuthStore(state => ({
       status: state.status,
@@ -25,7 +25,6 @@ export const AppLayout = () => {
       if (start) {
         const interval: NodeJS.Timeout = setInterval(() => {
           getRefreshToken();
-          console.log('refresh_token');
         }, 60000);
         setRefreshInterval(interval);
         return;
@@ -44,7 +43,10 @@ export const AppLayout = () => {
 
   useEffect(() => {
     if (!token && status === 'authorized') getRefreshToken();
-    if (status === 'unauthorized' || !statusValidate()) logout();
+    if (status === 'unauthorized' || !statusValidate()) {
+      logout();
+      navigation(RoutePath.ROOT);
+    }
 
     handleRefresh(status === 'authorized');
 
@@ -55,24 +57,20 @@ export const AppLayout = () => {
 
   return (
     <>
-      {status === 'authorized' ? (
-        <div className='bg-slate-100 overflow-y-scroll w-screen h-screen antialiased text-slate-800 selection:bg-blue-600 selection:text-white'>
-          <div className='flex relative'>
-            <Sidemenu
-              username={user?.name}
-              role={user?.role}
-              routes={sidemenuRoutes}
-              handleLogout={handleLogout}
-            />
+      <div className='bg-slate-100 overflow-y-scroll w-screen h-screen antialiased text-slate-800 selection:bg-blue-600 selection:text-white'>
+        <div className='flex relative'>
+          <Sidemenu
+            username={user?.name}
+            role={user?.role}
+            routes={sidemenuRoutes}
+            handleLogout={handleLogout}
+          />
 
-            <main className='w-full p-4'>
-              <Outlet />
-            </main>
-          </div>
+          <main className='w-full p-4'>
+            <Outlet />
+          </main>
         </div>
-      ) : (
-        <Navigate to={RoutePath.ROOT} />
-      )}
+      </div>
     </>
   );
 };

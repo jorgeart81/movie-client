@@ -35,7 +35,10 @@ const storeApi: StateCreator<
       const { accessToken, refreshToken } = await AuthService.refreshToken();
       set({ token: accessToken, refreshToken, status: 'authorized' });
     } catch (error) {
-      set({ status: 'pending' });
+      const err = error as Error;
+      err.message === 'Unauthorized'
+        ? set({ status: 'unauthorized' })
+        : set({ status: 'pending' });
       if (error instanceof Error) throw error.message;
     }
   },
@@ -55,6 +58,7 @@ const storeApi: StateCreator<
   logout: async () => {
     try {
       const { ok } = await AuthService.logout();
+      console.log(ok);
       if (ok) set(initialState);
     } catch (error) {
       if (error instanceof Error) throw error.message;
