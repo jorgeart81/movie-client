@@ -1,26 +1,23 @@
 import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-import { useAuthStore } from '@/store';
 import { RoutePath } from '@/models';
+import { useAuthStore } from '@/store';
 
 export const AuthenticationLayout = () => {
   const navitate = useNavigate();
 
-  const { status, getRefreshToken, statusValidate, logout } = useAuthStore(
-    state => ({
-      status: state.status,
-      getRefreshToken: state.getRefreshToken,
-      statusValidate: state.statusValidate,
-      logout: state.logout,
-    })
-  );
+  const { status, token, statusValidate, logout } = useAuthStore(state => ({
+    status: state.status,
+    token: state.token,
+    statusValidate: state.statusValidate,
+    logout: state.logout,
+  }));
 
   useEffect(() => {
     const isStatusValid = statusValidate();
-
+    
     if (!isStatusValid) logout();
-    if (status === 'pending') getRefreshToken();
 
     if (status === 'authorized') {
       navitate(RoutePath.DASHBOARD, {
@@ -29,7 +26,7 @@ export const AuthenticationLayout = () => {
       });
       return;
     }
-  }, [status]);
+  }, [status, token]);
 
   return <Outlet />;
 };

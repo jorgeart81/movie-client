@@ -4,10 +4,12 @@ import { devtools, persist } from 'zustand/middleware';
 import { SotorageKey, type User } from '@/models';
 import { AuthService } from '@/services';
 import type { AuthStatus } from '../interfaces';
+import { cryptoAdapter } from '@/utils';
 
 interface AuthState {
   user?: User;
   status: AuthStatus;
+  stval?: string;
   token?: string;
   refreshToken?: string;
 }
@@ -33,12 +35,13 @@ const storeApi: StateCreator<
   getRefreshToken: async () => {
     try {
       const { accessToken, refreshToken } = await AuthService.refreshToken();
-      set({ token: accessToken, refreshToken, status: 'authorized' });
+      set({
+        token: accessToken,
+        refreshToken,
+        status: accessToken ? 'authorized' : 'unauthorized',
+      });
     } catch (error) {
-      const err = error as Error;
-      err.message === 'Unauthorized'
-        ? set({ status: 'unauthorized' })
-        : set({ status: 'pending' });
+      set({ status: 'unauthorized' });
       if (error instanceof Error) throw error.message;
     }
   },
@@ -48,7 +51,12 @@ const storeApi: StateCreator<
         email,
         password,
       });
-      set({ token: accessToken, refreshToken, status: 'authorized' });
+      set({
+        token: accessToken,
+        refreshToken,
+        status: accessToken ? 'authorized' : 'unauthorized',
+        stval: cryptoAdapter.encrypt('authorized'),
+      });
     } catch (error) {
       set(initialState);
       if (error instanceof Error) throw error.message;
@@ -82,7 +90,7 @@ export const useAuthStore = create<AuthState & Actions>()(
   devtools(
     persist(storeApi, {
       name: SotorageKey.AUTH,
-      partialize: state => ({ status: state.status }),
+      partialize: state => ({ status: state.status, stval: state.stval }),
     })
   )
 );

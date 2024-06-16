@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 import { RoutePath, sidemenuRoutes } from '@/models';
@@ -6,9 +6,7 @@ import { useAuthStore } from '@/store/auth/auth.store';
 import { Sidemenu } from '../sidemenu';
 
 export const AppLayout = () => {
-  const [refreshInterval, setRefreshInterval] = useState<
-    NodeJS.Timeout | undefined
-  >();
+  const refreshInterval = useRef<NodeJS.Timeout>();
   const navigation = useNavigate();
   const { status, token, user, getRefreshToken, logout, statusValidate } =
     useAuthStore(state => ({
@@ -23,17 +21,16 @@ export const AppLayout = () => {
   const handleRefresh = useCallback(
     (start: boolean) => {
       if (start) {
-        const interval: NodeJS.Timeout = setInterval(() => {
+        refreshInterval.current = setInterval(() => {
           getRefreshToken();
-        }, 60000);
-        setRefreshInterval(interval);
+        }, 600000);
         return;
       }
 
-      clearInterval(refreshInterval);
-      setRefreshInterval(undefined);
+      clearInterval(refreshInterval.current);
+      refreshInterval.current = undefined;
     },
-    [refreshInterval]
+    [refreshInterval.current]
   );
 
   const handleLogout = () => {
@@ -42,7 +39,7 @@ export const AppLayout = () => {
   };
 
   useEffect(() => {
-    if (!token && status === 'authorized') getRefreshToken();
+    if (!token) navigation(RoutePath.LOGIN);
     if (status === 'unauthorized' || !statusValidate()) {
       logout();
       navigation(RoutePath.LOGIN);
@@ -53,7 +50,7 @@ export const AppLayout = () => {
     return () => {
       handleRefresh(false);
     };
-  }, [status]);
+  }, [status, token]);
 
   return (
     <>

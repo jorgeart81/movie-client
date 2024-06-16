@@ -3,13 +3,14 @@ import { redirect } from 'react-router-dom';
 import { RoutePath } from '@/models';
 import { useAuthStore } from '@/store';
 
-export function authLoader() {
+export async function authLoader() {
   const status = useAuthStore.getState().status;
-  const statusValidate = useAuthStore.getState().statusValidate;
+  const token = useAuthStore.getState().token;
+  const getRefreshToken = useAuthStore.getState().getRefreshToken;
 
-  if (status !== 'authorized' || !statusValidate()) {
-    return redirect(RoutePath.LOGIN);
-  }
+  if (status === 'authorized' && !token) await getRefreshToken();
+
+  if (status !== 'authorized') return redirect(RoutePath.LOGIN);
 
   return null;
 }

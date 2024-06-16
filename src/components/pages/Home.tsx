@@ -5,8 +5,8 @@ import { MovieCard } from '../cards';
 import { formattedDate } from '@/utils';
 
 const Home = () => {
-  const getMovies = useMoviesStore(state => state.getMovies);
   const movies = useMoviesStore(state => state.movies);
+  const getMovies = useMoviesStore(state => state.getMovies);
 
   useEffect(() => {
     getMovies().catch(console.log);
