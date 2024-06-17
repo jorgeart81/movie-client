@@ -7,9 +7,9 @@ import { useAuthStore } from '@/store';
 export const AuthenticationLayout = () => {
   const navitate = useNavigate();
 
-  const { status, token, statusValidate, logout } = useAuthStore(state => ({
+  const { status, stval, statusValidate, logout } = useAuthStore(state => ({
     status: state.status,
-    token: state.token,
+    stval: state.stval,
     statusValidate: state.statusValidate,
     logout: state.logout,
   }));
@@ -19,14 +19,14 @@ export const AuthenticationLayout = () => {
     
     if (!isStatusValid) logout();
 
-    if (status === 'authorized') {
+    if (status === 'authorized' && stval) {
       navitate(RoutePath.DASHBOARD, {
         replace: true,
         unstable_viewTransition: true,
       });
       return;
     }
-  }, [status, token]);
+  }, [status, stval]);
 
   return <Outlet />;
 };

@@ -33,15 +33,25 @@ const storeApi: StateCreator<
 
   // Actions
   getRefreshToken: async () => {
+    const stval = get().stval;
     try {
+      if (!stval) throw new Error('unauthorized');
+
+      const stvalDecode: AuthStatus = cryptoAdapter.decrypt(stval);
+      if (stvalDecode !== 'authorized')
+        throw new Error('unauthorized');
+
       const { accessToken, refreshToken } = await AuthService.refreshToken();
+      if (!accessToken || stvalDecode !== 'authorized')
+        throw new Error('unauthorized');
+
       set({
         token: accessToken,
         refreshToken,
-        status: accessToken ? 'authorized' : 'unauthorized',
+        status: 'authorized',
       });
     } catch (error) {
-      set({ status: 'unauthorized' });
+      set(initialState);
       if (error instanceof Error) throw error.message;
     }
   },
