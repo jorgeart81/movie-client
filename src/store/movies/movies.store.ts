@@ -3,35 +3,32 @@ import { devtools, persist } from 'zustand/middleware';
 
 import type { Movie } from '../interfaces';
 import { MoviesService } from '@/services';
-import { SotorageKey } from '@/models';
+import { SotorageKey } from '@/common/values';
 
 interface MoviesState {
-  movies: Movie[];
-  isLoading: boolean;
+	movies: Movie[];
+	isLoading: boolean;
 }
 
 interface Actions {
-  getMovies: () => Promise<void>;
+	getMovies: () => Promise<void>;
 }
 
-const storeApi: StateCreator<
-  MoviesState & Actions,
-  [['zustand/devtools', never]]
-> = set => ({
-  movies: [],
-  isLoading: false,
+const storeApi: StateCreator<MoviesState & Actions, [['zustand/devtools', never]]> = set => ({
+	movies: [],
+	isLoading: false,
 
-  // Actions
-  getMovies: async () => {
-    try {
-      const movies = await MoviesService.getMovies();
-      set({ movies });
-    } catch (error) {
-      if (error instanceof Error) throw error.message;
-    }
-  },
+	// Actions
+	getMovies: async () => {
+		try {
+			const movies = await MoviesService.getMovies();
+			set({ movies });
+		} catch (error) {
+			if (error instanceof Error) throw error.message;
+		}
+	},
 });
 
 export const useMoviesStore = create<MoviesState & Actions>()(
-  devtools(persist(storeApi, { name: SotorageKey.MOVIES }))
+	devtools(persist(storeApi, { name: SotorageKey.MOVIES }))
 );

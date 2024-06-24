@@ -1,4 +1,4 @@
-import { RoutePath } from './enum/routePath';
+import { RoutePath } from '@/common/values';
 
 export interface SidemenuRoute {
   to: string;

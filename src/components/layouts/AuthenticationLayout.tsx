@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-import { RoutePath } from '@/models';
+import { RoutePath } from '@/common/values';
 import { useAuthStore } from '@/store';
 
 export const AuthenticationLayout = () => {
